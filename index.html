@@ -886,7 +886,7 @@
         }
       }
       if (match && !reduceLives) {
-        this.highscore += 100000;
+        this.highscore += 100000*this.curHardness;
         this.coin.remove();
         this.initCoin();
       }
