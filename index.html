@@ -10,7 +10,6 @@
 <body>
 
 <script>
-
   class iefix {
 
     constructor() {
@@ -115,11 +114,9 @@
                     height: ${this.enemyAndPlayerSize}px;
                     width: ${this.enemyAndPlayerSize}px;
                 }
-
                 .achievement *{
                   box-sizing: border-box;
                 }
-
                 .achievement {
                   position: fixed;
                   pointer-events: none;
@@ -127,7 +124,6 @@
                   bottom: 16px;
                   z-index: 100;
                 }
-
                 @keyframes rotate {
                   0% {
                     transform: rotateY(0deg);
@@ -139,7 +135,6 @@
                     transform: rotateY(0deg);
                   }
                 }
-
                 @keyframes scale_circle_1 {
                   0% {
                     transform: scale3d(0, 0, 0);
@@ -182,7 +177,6 @@
                     opacity: 0;
                   }
                 }
-
                 @keyframes circle_grow_move {
                   1% {
                     opacity: 0;
@@ -228,9 +222,6 @@
                     transform: scale(0.1);
                   }
                 }
-
-
-
                 @keyframes trophy_animate_opacity {
                   0% {
                     opacity: 0;
@@ -251,7 +242,6 @@
                     opacity: 0;
                   }
                 }
-
                 @keyframes xbox_animate_opacity {
                   0% {
                     opacity: 1;
@@ -273,7 +263,6 @@
                     opacity: 1;
                   }
                 }
-
                 @keyframes banner-animate {
                   0% {
                     width: 75px;
@@ -302,7 +291,6 @@
                     opacity: 0;
                   }
                 }
-
                 @keyframes textSlide {
                   0% {
                     transform: translateY(85px);
@@ -328,7 +316,6 @@
                     opacity: 0;
                   }
                 }
-
                 .animation {
                   width: 355px;
                   height: 110px;
@@ -344,42 +331,35 @@
                   -ms-flex-pack: center;
                   justify-content: center;
                 }
-
                 .circle.circle_animate {
                   animation: circle_grow_move;
                   animation-duration: 10.5s;
                   transform-origin: center;
                 }
-
                 .circle.circle_animate::before {
                   animation: scale_circle_1;
                   animation-duration: 10.5s;
                   transform-origin: center;
                   animation-iteration-count: 2;
                 }
-
                 .circle.circle_animate::after {
                   animation: scale_circle_1;
                   animation-duration: 10.5s;
                   animation-delay: 0.1s;
                   transform-origin: center;
                 }
-
                 .circle.circle_animate .trophy_animate {
                   animation: trophy_animate_opacity;
                   animation-duration: 10.5s;
                 }
-
                 .circle.circle_animate .xbox_img {
                   animation: xbox_animate_opacity;
                   animation-duration: 10.5s;
                   z-index: 102;
                 }
-
                 .rare .trophy_img{
                   display: none;
                 }
-
                 .circle {
                   width: 75px;
                   height: 75px;
@@ -392,7 +372,6 @@
                   overflow: hidden;
                   z-index: 4;
                 }
-
                 .circle::before {
                   content: "";
                   opacity: 0;
@@ -405,7 +384,6 @@
                   border-radius: 50%;
                   display: block;
                 }
-
                 .circle::after {
                   content: "";
                   opacity: 0;
@@ -418,15 +396,12 @@
                   border-radius: 50%;
                   display: block;
                 }
-
                 .rare .circle::after{
                   z-index: -1;
                 }
-
                 .rare  .circle::before{
                   z-index: -1;
                 }
-
                 .circle .img {
                   height: 50%;
                   left: 25%;
@@ -434,23 +409,20 @@
                   position: absolute;
                   z-index: 100;
                 }
-
                 .circle .img img {
                   height: 100%;
+                  max-width: unset;
                   position: absolute;
                 }
-
                 .circle .trophy_1 {
                   animation: rotate;
                   animation-duration: 6s;
                   animation-iteration-count: infinite;
                 }
-
                 .achieve_disp_animate {
                   animation: textSlide;
                   animation-duration: 10.5s;
                 }
-
                 .banner {
                   width: 355px;
                   height: 75px;
@@ -471,8 +443,6 @@
                   overflow: hidden;
                   border-radius: 100px;
                 }
-
-
                 .banner-outer {
                   display: -ms-flexbox;
                   display: flex;
@@ -484,25 +454,21 @@
                   top: -75px;
                   position: relative;
                 }
-
                 .banner.banner-animate {
                   animation: banner-animate;
                   animation-duration: 10.5s;
                 }
-
                 .achieve_name::before,
                 .achieve_score::before {
                   display: none !important;
                   opacity: 0;
                   content: "";
                 }
-
                 .achieve_name::after,
                 .achieve_score::after {
                   display: none;
                   content: "";
                 }
-
                 .achieve_disp {
                   display: -ms-flexbox;
                   display: flex;
@@ -517,11 +483,9 @@
                   height: 100%;
                   top: 0;
                 }
-
                 .achieve_disp input {
                   opacity: 1 !important;
                 }
-
                 .achieve_disp .score_disp {
                   width: 100%;
                   display: -ms-flexbox;
@@ -532,7 +496,6 @@
                   align-items: flex-start;
                   margin-bottom: 0 !important;
                 }
-
                 .achieve_disp .achiev_name {
                   border: none;
                   outline: none;
@@ -544,19 +507,16 @@
                   white-space: nowrap;
                   text-overflow: ellipsis;
                 }
-
                 .acheive_score {
                   margin-left: 5px;
                   margin-right: 5px;
                   color: white;
                 }
-
                 .unlocked {
                   width: 100%;
                   color: white;
                   font-weight: 400;
                 }
-
                 .gamerscore {
                   display: -ms-flexbox;
                   display: flex;
@@ -566,7 +526,6 @@
                   align-items: center;
                   height: 24px;
                 }
-
                 .gamerscore input {
                   margin-left: 5px;
                   width: 30px;
@@ -580,18 +539,15 @@
                   font-weight: bold;
                   font-size: 13pt;
                 }
-
                 .hyphen_sep {
                   margin-right: 5px;
                   color: white;
                   font-size: 15pt;
                   line-height: 24px;
                 }
-
                 .rare .brilliant-wrap{
                   display: block;
                 }
-
                 .brilliant-wrap{
                   display: none;
                   height: 75px;
@@ -602,7 +558,6 @@
                   animation: brilliant-wrap 10s ease-in-out;
                   opacity: 0;
                 }
-
                 .brilliant {
                   height: 75px;
                   width: 75px;
@@ -611,7 +566,6 @@
                   background-position: right;
                   animation: brilliant 7.4s steps(147) 2s;
                 }
-
                 @keyframes brilliant {
                   0% {
                     background-position: 0;
@@ -620,7 +574,6 @@
                     background-position: -11025px;
                   }
                 }
-
                 @keyframes brilliant-wrap{
                   0%, 20%{
                     opacity: 0;
@@ -641,7 +594,6 @@
                 <div id="ie-highscore"></div>
                 <div id="ie-player"></div>
                 <div id="ie-elements"></div>
-
                 <div class="achievement">
                     <div class="animation">
                         <div class="circle">
@@ -661,7 +613,6 @@
                             <div class="banner">
                                 <div class="achieve_disp">
                                     <span class="unlocked">
-
                                     </span>
                                     <div class="score_disp">
                                         <div class="gamerscore">
@@ -923,7 +874,6 @@
   }
 
   const ie = new iefix();
-
 </script>
 
 </body>
