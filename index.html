@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<script>
+
+    class iefix {
+
+        constructor() {
+
+            this.second = 1000;
+            this.fps = this.second/60;
+
+            /* LEVEL SETTINGS */
+            this.hardnessThick = 0.01;
+            this.curHardness = 1.5;
+            this.enemySpeed = 10;
+            this.wh = window.innerHeight;
+            this.ww = window.innerWidth;
+
+            /* ELEMENTS */
+            this.body = document.getElementsByTagName('body')[0];
+            this.canvas = null;
+            this.player = null;
+            this.elements = null;
+            this.livesDiv = null;
+            this.highscoreDiv = null;
+            this.coin = null;
+
+            this.enemyAndPlayerSize = 30;
+
+            /* PLAYER */
+            this.xforce = 0;
+            this.yforce = 0;
+            this.xspeed = 10;
+            this.yspeed = 10;
+            this.key_left = false;
+            this.key_right = false;
+            this.key_top = false;
+            this.key_bottom = false;
+            this.lives = 3;
+            this.highscore = 0;
+
+            this.init();
+        }
+
+        init() {
+            this.body.insertAdjacentHTML('beforeend',`
+            <style>
+                body {
+                    overflow: hidden;
+                }
+                #ie-canvas {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 999999999999;
+                    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAADW0lEQVRIiX1XQXLbMAxcsDpF917se+xmnA/1rf2EO23yAPcJbi8N0SFBkAtKrjIZWRYIcIHFEpbPX7+pCqCKeiWMK7fnjPJS6vcigCg2V1oP+Hv/Ve11xyaT7+KvfnYjMd914Qha7tLead1gRvy3oDcs6xHsrwJqvoZfA9EBSkWtfaFMwe2V1OC2aEDKFakg3289kK8p/x6Es7r0NBSjls4eHDH9jr6msvxROi19EgLtX2J+8n+NRsDz6bWnSxqS3J7bVvsmHTHonui/ZDMxIkbGTpf1gLf3a717QLcXHWTJnYgxqGfEfX55vmBJk0HfvyMTqyF6LWMmENJf1shETPORGor0VEB8txrPaOFEoOBMjOwdQOzleqepfSwrCJtPbMhX4raod+1BEvCQRPlBBr0bPNbCL7T21LwRgy5ijN0TD0wk8g0q2F6aTevj8nA6Xcy5xjSltsDTxQhDDUMZtJNSdMvqzv6iNu+l2Ouh7zyRermaZVKeGd1Abb0MjHZLU4f0jRepK1fR2YwtKq9v6qgl9Kq3T2rsNsUa9XBOnJ8vEf02tXsslY7aA1mGHOEgHts78rQe8bNm9Th85qk2XWNJ3HPYnFRHpS36oSCRB47SD5aS1Rrjfuvvl0Zka3Btnxv5hAKPuwL3m3328ujIkj/nqvxDRkE+pNrstAgfYyBtTQ2dSrTL1DbcinbKSZBRNA4EydwMAToc9EDdhw6p1K0Paam0U06a+jknJB4SgxyjVsBeL6L3o7eNTO3Cm3E7ExHjUsqTEHg/+w7dKad1HgQwCcy8aQY025p+rkebm9ZDrw/wYMaChB4+n18fnsGs616eNEhjdEc7QWalmUehTOmWctS9XevGOe08uzHAipgZCEqhTxlcI+5RrvfHb2sr71fuFE57z8J6iHLLYywbsn77xBEcbSuxuVznXXxS1GbZLNg70F2TfQNVLCZU9TuNM1pZ52dDAmnwLJEcHHsp84lxGvQAF44tMef5rjOYydbC4aUxVnfZPbLh9uNZYy8T6ZIbu1M+KFJrsR9vV3x6ioSYfyXwNb6LpeONt+FP8HK60JlLw18bzvKfwlyv6fiVUDYWW2/miaHmecsCKyqaMnKWfpxFILbb+OHm2Si9X9a7Qo2JxYe7LWFVgX9ddfPvJwdQFAAAAABJRU5ErkJggg==');
+                }
+                #ie-player,
+                #ie-elements > div {
+                    position: absolute;
+                    height: ${this.enemyAndPlayerSize}px;
+                    width: ${this.enemyAndPlayerSize}px;
+                }
+                #ie-elements > div {
+                    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAABqklEQVRIiWP8//8/AynAXFcXq4aTly8zkmIOE0m2UhEQ7WOYT/97Pwbz2QXYwXTrHEkwXcr5F66WGN8PXh+j+1T4oiWYfqt/HEzDfP7980e4HuZNqmAan88HzMcspGp4rHgeTHMRodbT0xMcWtu3b8fw+eDzMcy1hADPQSOwiu9G+zFUIvsUllaEZGTA4nTxMXKh8+7JExAft49hroVpgqXeb58g8v+Yf4DpL/bnIAKfCVsKyhmMW2XBTLrFMSw7wsDAJi5sBT+uzC973xBMvxZETUx9KzXgbOTiExcYuCLTTEfnf/d3ZjAny+0FXIL7sCiKwr9+t8E0Jy8/mH7/CBIgHIIfwPSP9wI49YIAKI5hxS0oZQ9sHIPiBJzqPnFQ1XC26FdIPHZw1vu1VAzMG/gi89snDniKBYHXfpBUC6viSAGoPkWkB+S4H3gfC8r9Z/gidw4hg6MIhFUK76HVIwwgh9a7w09Q5LjRzACVEQPb9IGVXMhxg9yUQQa48jEyGPxNH5jLkMtsJu+fKAq/wfM4zIcCDJSAAfPx4GtX4+ojkQIGX+JiYGAAAOwCp3LLNtisAAAAAElFTkSuQmCC') no-repeat;
+                }
+                #ie-player {
+                    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAABpklEQVRIiaVXW64DIQgVO2vt313NpD9da0dvtOIgAj5KYjPxweEAIoUYo9sRAMCDWzr8j6BJIgCs61i1FkHxHAOd1rfEmIPi946rD025Jrs5oQJLbJhBUwoHhtdQNIwtNmltAlw1vpxNiZjBvbBoirQH56x483nKGNBilU5hLYGPYs/PdFltsaZr1+eZx6JUBc29wzhw6zlgtti/73VivhFfh8DZc8V9op9oQkmAHYBvwRXvfTG1TJRYPo63i6EHo3PAgid4lDLvpRgUr88zxuDyyHtDO9Q5RWgCq8AUdGVcpw6OhLZep1+kqVxThYPFUlsPr4GeguVLoIHeMbQqJVOdC33ijIzSig3PwSa765XwNwsE5wNBcd/j7yZAq10xoquvdnafdoKldUyqkS5XL/PCk3idsruRJRWjNkAFtor87FvMi4UCnH+6DkQDHRmm1WhWPisDTzfxQzvdIwoF5KC0EYDvHuCAzTWzZPaNFlufWZANqc8hyuGc/YyNei3qxlGHSmW62TOytJnSzvOzs48EMqqAUlexIsPrxMDp/6SO3TS4c+4fMynl9b30eaIAAAAASUVORK5CYII=') no-repeat;
+                }
+                .ie-coin {
+                    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAABcklEQVRIicWWMU7EQAxFPSukPQstEhW0FCDRcgcargBcgYY7cAAaWqiQUtDkKlAF2YlHjhN7nGyS/dIqK8XrZ397NZOermGKmkJsiuY6CcRk2PklwM3deND7G8D3Z68wt4hSx40Hs9QV4cKtjqnyOVAU/0Y4MChgrONZXVqyut+tCYWue8ypF1ODF4V6OSW46SpbRWenLUODF7dY6/a+D88drwllXV3s8/fBjLfSLjrb54f2M/WdFttNHW9hM4vtPprVkUOC9Pgy752loy7XJvr92U8HRzcWCtsvRTPGE8TbbJwhJ/PmiTGleX98/dETwQnPzdJfihN63VhQaXNV0yOFt7qU3JKeLSvPGO1eW2wzCDDavThcdotQthnUVqfuirI4FCWhGkw6tGsEaqi02AIfZPnYImmLM8i4V9MtAY8wvDlMhSngAArOIUGBVQ0NvPZvDhFZXUbAuQCEV3U7I3TAKkJ16EIj4F4CWUQp1hUA/APSso0zTVVZcgAAAABJRU5ErkJggg==') no-repeat;
+                }
+                #ie-lives {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    height: 30px;
+                }
+                #ie-lives > div {
+                    display: inline-block;
+                    margin: 15px;
+                    height: 30px;
+                    width: 30px;
+                    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAACkUlEQVRIic1Wz2sTQRT+dhO1SdOg1e5Bg8SDQpD0Ygg55taDYP6DgBV6tSfBo3oSBQXBW6z+A0I8SPVUb0EPRWMRvBhshbjWtMSQFrs/5G3fLNPJJqklJPngsbNv3o/Z783OG7iue0BKpdI8ADdIEonEumovhOa6+VFM1V7HiKBRdkKhUChXKpXcpGWFrzUa00HL+XQs/Hft1PS2YRhmtVpNky6dTldN0zQubzVOzu5Zx0mXARAC0Ga/p/Gp5sZEZDeXy1XK5XLBU/qfrus2vRqk6iILEn3CT7wvKD5VwL3PcoVtKMfoqeYV4wmAqwAsABeTZ/dnI5PA1i8H9W1vgRsA9gB8B5DnACsAzgMgjs9JgZsA6jx+CWCX/ZYkG4+GtzJVMu7e6aC+KVHe7FEaIQ+Y8kXJL9ybDy1QPSVoOiRizMBHyXwoNf7DzwuSzv/iHdly/vpAE4uNdCYocUS2XHo+0MQOP6OSbihUi53iSDo/8QGql5f3ZUCY4DCnpXCdVJ8AMDc30C+mf3xHKedQqBZJ5GR+kwiFQrbjOLoB4OcAkm0CeMbjewBalFjXHdu2Q+oihgo/cTwep8PF+9++sRwVawBWAfxmEaecyOGh1w2k3xncTR4C7s1xvYF0NIl8Pr9CNwwaL5qmQQ3y1iECUct7w+N3AH5ommPMzGyKmKq9v6uDoGmaO6t0lW74DOA1zz3iXuy6bnB7Q0CNVSkWiy9ErdYDavqYe+1tqabk0y/u+NRYRSqV+iJUq3z1ocPAZl2T3+uSn+zTDT1rrIJqTqpLAG7wXAnAVx73rKmC8aVaRjabfV+r1ZJWqxV71W57fd2KRttGLNZKJpO1/8rcb/cFSSaT+SB2MI2PEmM0VAP4B4bmGgXmhqrDAAAAAElFTkSuQmCC') no-repeat;
+                }
+                #ie-highscore {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    padding: 15px;
+                }
+                .ie-coin {
+                    position: absolute;
+                    height: ${this.enemyAndPlayerSize}px;
+                    width: ${this.enemyAndPlayerSize}px;
+                }
+            </style>
+            <div id="ie-canvas">
+                <div id="ie-lives"></div>
+                <div id="ie-highscore"></div>
+                <div id="ie-player"></div>
+                <div id="ie-elements"></div>
+            </div>
+        `);
+            this.canvas = document.getElementById('ie-canvas');
+            this.player = document.getElementById('ie-player');
+            this.elements = document.getElementById('ie-elements');
+            this.livesDiv = document.getElementById('ie-lives');
+            this.highscoreDiv = document.getElementById('ie-highscore');
+
+            this.initPlayer();
+            this.initEnemy();
+            this.initCoin();
+            this.run();
+        }
+
+        initCoin() {
+            const coin = document.createElement("div");
+            coin.classList.add("ie-coin");
+
+            // Get random x and y coordinates
+            const
+                x = Math.floor(Math.random() * this.canvas.getBoundingClientRect().width-(this.enemyAndPlayerSize*2))+this.enemyAndPlayerSize,
+                y = Math.floor(Math.random() * this.canvas.getBoundingClientRect().height-(this.enemyAndPlayerSize*2))+this.enemyAndPlayerSize;
+
+            coin.style.left = x+"px";
+            coin.style.top = y+"px";
+
+            this.coin = coin;
+            this.canvas.append(this.coin);
+        }
+
+        initPlayer() {
+            this.player.style.top = this.wh/2 - this.player.offsetHeight/2 + "px";
+            this.player.style.left = this.player.offsetWidth + "px";
+
+            this.updateLive();
+
+            window.addEventListener('keydown', this.handleKeyDown.bind(this), true);
+            window.addEventListener('keyup', this.handleKeyUp.bind(this), true);
+        }
+
+        updateLive() {
+            this.livesDiv.innerHTML = "";
+            for (let i = this.lives; i > 0; i--) {
+                let e = document.createElement("div");
+                this.livesDiv.append(e);
+            }
+        }
+
+        initEnemy() {
+            setTimeout(() => {
+                let probability = (this.curHardness < 5) ? this.curHardness : 5;
+                if (Math.floor(Math.random() * 20) >= probability) {
+
+                    let enemy = document.createElement('div');
+                    enemy.style.left = this.ww + this.enemyAndPlayerSize + "px";
+                    enemy.style.top = this.player.getBoundingClientRect().top + "px";
+                    this.elements.append(enemy);
+
+                    let enemyInterval = setInterval(() => {
+                        enemy.style.left = parseInt(enemy.style.left.replace("px","")) - (this.enemySpeed + this.curHardness) + "px";
+
+                        if (parseInt(enemy.style.left.replace("px","")+this.enemyAndPlayerSize) <= 0) {
+                            enemy.remove();
+                            clearInterval(enemyInterval);
+                        } else {
+                            this.checkCollisions(enemy,this.player,true);
+                        }
+                    }, this.fps);
+
+                    this.curHardness += this.hardnessThick;
+                }
+                this.initEnemy();
+            }, this.second/this.curHardness)
+        }
+
+        run() {
+            setTimeout(() => {
+
+                this.playerMovement();
+                this.updateHighscore();
+                this.checkCollisions(this.coin,this.player,false);
+                this.run();
+
+            }, this.fps);
+        }
+
+        updateHighscore() {
+            this.highscore += this.curHardness;
+            this.highscoreDiv.innerHTML = Math.trunc(this.highscore);
+        }
+
+        playerMovement() {
+            if (this.key_left) this.xforce = -this.xspeed;
+            if (this.key_right) this.xforce = this.xspeed;
+            if (!this.key_left && !this.key_right) this.xforce = 0;
+
+            if (this.key_top) this.yforce = -this.yspeed;
+            if (this.key_bottom) this.yforce = this.yspeed;
+            if (!this.key_top && !this.key_bottom) this.yforce = 0;
+
+            if (this.player.getBoundingClientRect().left <= 0 && this.key_left) this.xforce = 0;
+            if (this.player.getBoundingClientRect().right >= this.ww && this.key_right) this.xforce = 0;
+            if (this.player.getBoundingClientRect().top <= 0 && this.key_top) this.yforce = 0;
+            if (this.player.getBoundingClientRect().bottom >= this.wh && this.key_bottom) this.yforce = 0;
+
+            this.player.style.left = this.player.getBoundingClientRect().left + this.xforce + "px";
+            this.player.style.top = this.player.getBoundingClientRect().top + this.yforce + "px";
+        }
+
+        handleKeyDown(event) {
+            if (event.keyCode === 37 || event.keyCode === 65)
+                this.key_left = true;
+            else if (event.keyCode === 39 || event.keyCode === 68)
+                this.key_right = true;
+            else if (event.keyCode === 38 || event.keyCode === 87)
+                this.key_top = true;
+            else if (event.keyCode === 40 || event.keyCode === 83)
+                this.key_bottom = true;
+        }
+
+        handleKeyUp(event) {
+            if (event.keyCode === 37 || event.keyCode === 65)
+                this.key_left = false;
+            else if (event.keyCode === 39 || event.keyCode === 68)
+                this.key_right = false;
+            else if (event.keyCode === 38 || event.keyCode === 87)
+                this.key_top = false;
+            else if (event.keyCode === 40 || event.keyCode === 83)
+                this.key_bottom = false;
+        }
+
+        getPositions(box) {
+            const
+                pos = box.getBoundingClientRect(),
+                width = pos.width,
+                height = pos.height;
+            return [ [ pos.left, pos.left + width ], [ pos.top, pos.top + height ] ];
+        }
+
+        comparePositions(p1, p2) {
+            const
+                x1 = p1[0] < p2[0] ? p1 : p2,
+                x2 = p1[0] < p2[0] ? p2 : p1;
+            return x1[1] > x2[0] || x1[0] === x2[0] ? true : false;
+        }
+
+        checkCollisions(enemy,player,reduceLives){
+            const
+                pos = this.getPositions(enemy),
+                pos2 = this.getPositions(player),
+                horizontalMatch = this.comparePositions(pos[0], pos2[0]),
+                verticalMatch = this.comparePositions(pos[1], pos2[1]),
+                match = horizontalMatch && verticalMatch;
+            if (match && reduceLives) {
+                enemy.remove();
+                this.lives--;
+                this.updateLive();
+                if (this.lives === 0) {
+                    alert("Game Over!");
+                    alert("Score: "+Math.trunc(this.highscore));
+                    window.location = window.location;
+                }
+            }
+            if (match && !reduceLives) {
+                this.highscore += 100000;
+                this.coin.remove();
+                this.initCoin();
+            }
+        }
+
+    }
+
+    const ie = new iefix();
+
+</script>
+
+</body>
+</html>
