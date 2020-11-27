@@ -14,53 +14,53 @@
 
     constructor() {
 
-      this.second = 1000;
-      this.fps = this.second/60;
+        this.second = 1000;
+        this.fps = this.second/60;
 
-      /* LEVEL SETTINGS */
-      this.hardnessThick = 0.01;
-      this.curHardness = 1.5;
-      this.enemySpeed = 10;
-      this.wh = window.innerHeight;
-      this.ww = window.innerWidth;
+        /* LEVEL SETTINGS */
+        this.hardnessThick = 0.01;
+        this.curHardness = 1.5;
+        this.enemySpeed = 10;
+        this.wh = window.innerHeight;
+        this.ww = window.innerWidth;
 
-      /* ELEMENTS */
-      this.body = document.getElementsByTagName('body')[0];
-      this.canvas = null;
-      this.player = null;
-      this.elements = null;
-      this.livesDiv = null;
-      this.highscoreDiv = null;
-      this.coin = null;
-      this.ach1Unlocked = false;
-      this.ach2Unlocked = false;
-      this.ach3Unlocked = false;
-      this.ach4Unlocked = false;
-      this.ach5Unlocked = false;
-      this.ach6Unlocked = false;
-      this.ach7Unlocked = false;
-      this.ach8Unlocked = false;
-      this.ach9Unlocked = false;
+        /* ELEMENTS */
+        this.body = document.getElementsByTagName('body')[0];
+        this.canvas = null;
+        this.player = null;
+        this.elements = null;
+        this.livesDiv = null;
+        this.highscoreDiv = null;
+        this.coin = null;
+        this.ach1Unlocked = false;
+        this.ach2Unlocked = false;
+        this.ach3Unlocked = false;
+        this.ach4Unlocked = false;
+        this.ach5Unlocked = false;
+        this.ach6Unlocked = false;
+        this.ach7Unlocked = false;
+        this.ach8Unlocked = false;
+        this.ach9Unlocked = false;
 
-      this.enemyAndPlayerSize = 30;
+        this.enemyAndPlayerSize = 30;
 
-      /* PLAYER */
-      this.xforce = 0;
-      this.yforce = 0;
-      this.xspeed = 10;
-      this.yspeed = 10;
-      this.key_left = false;
-      this.key_right = false;
-      this.key_top = false;
-      this.key_bottom = false;
-      this.lives = 3;
-      this.highscore = 0;
+        /* PLAYER */
+        this.xforce = 0;
+        this.yforce = 0;
+        this.xspeed = 10;
+        this.yspeed = 10;
+        this.key_left = false;
+        this.key_right = false;
+        this.key_top = false;
+        this.key_bottom = false;
+        this.lives = 3;
+        this.highscore = 0;
 
-      this.init();
+        this.init();
     }
 
     init() {
-      this.body.insertAdjacentHTML('beforeend',`
+        this.body.insertAdjacentHTML('beforeend',`
             <style>
                 body {
                     overflow: hidden;
@@ -629,251 +629,267 @@
                 </div>
             </div>
         `);
-      this.canvas = document.getElementById('ie-canvas');
-      this.player = document.getElementById('ie-player');
-      this.elements = document.getElementById('ie-elements');
-      this.livesDiv = document.getElementById('ie-lives');
-      this.highscoreDiv = document.getElementById('ie-highscore');
+        this.canvas = document.getElementById('ie-canvas');
+        this.player = document.getElementById('ie-player');
+        this.elements = document.getElementById('ie-elements');
+        this.livesDiv = document.getElementById('ie-lives');
+        this.highscoreDiv = document.getElementById('ie-highscore');
 
-      this.initPlayer();
-      this.initEnemy();
-      this.initCoin();
-      this.run();
+        this.initPlayer();
+        this.initEnemy();
+        this.initCoin();
+        this.run();
     }
 
     initCoin() {
-      const coin = document.createElement("div");
-      coin.classList.add("ie-coin");
+        const coin = document.createElement("div");
+        coin.classList.add("ie-coin");
 
-      // Get random x and y coordinates
-      const
-        x = Math.floor(Math.random() * this.canvas.getBoundingClientRect().width-(this.enemyAndPlayerSize*2))+this.enemyAndPlayerSize,
-        y = Math.floor(Math.random() * this.canvas.getBoundingClientRect().height-(this.enemyAndPlayerSize*2))+this.enemyAndPlayerSize;
+        // Get random x and y coordinates
+        const
+            x = Math.floor(Math.random() * (this.canvas.getBoundingClientRect().width-this.enemyAndPlayerSize)),
+            y = Math.floor(Math.random() * (this.canvas.getBoundingClientRect().height-this.enemyAndPlayerSize));
 
-      coin.style.left = x+"px";
-      coin.style.top = y+"px";
+        coin.style.left = x+"px";
+        coin.style.top = y+"px";
 
-      this.coin = coin;
-      this.canvas.append(this.coin);
+        this.coin = coin;
+        this.canvas.append(this.coin);
     }
 
     initPlayer() {
-      this.player.style.top = this.wh/2 - this.player.offsetHeight/2 + "px";
-      this.player.style.left = this.player.offsetWidth + "px";
+        this.player.style.top = this.wh/2 - this.player.offsetHeight/2 + "px";
+        this.player.style.left = this.player.offsetWidth + "px";
 
-      this.updateLive();
+        this.updateLive();
 
-      window.addEventListener('keydown', this.handleKeyDown.bind(this), true);
-      window.addEventListener('keyup', this.handleKeyUp.bind(this), true);
+        window.addEventListener('keydown', this.handleKeyDown.bind(this), true);
+        window.addEventListener('keyup', this.handleKeyUp.bind(this), true);
     }
 
     updateLive() {
-      this.livesDiv.innerHTML = "";
-      for (let i = this.lives; i > 0; i--) {
-        let e = document.createElement("div");
-        this.livesDiv.append(e);
-      }
+        this.livesDiv.innerHTML = "";
+        for (let i = this.lives; i > 0; i--) {
+            let e = document.createElement("div");
+            this.livesDiv.append(e);
+        }
     }
 
     initEnemy() {
-      setTimeout(() => {
-        let probability = (this.curHardness < 5) ? this.curHardness : 5;
-        if (Math.floor(Math.random() * 20) >= probability) {
+        setTimeout(() => {
+            let probability = (this.curHardness < 5) ? this.curHardness : 5;
+            if (Math.floor(Math.random() * 20) >= probability) {
 
-          let enemy = document.createElement('div');
-          enemy.style.left = this.ww + this.enemyAndPlayerSize + "px";
-          enemy.style.top = this.player.getBoundingClientRect().top + "px";
-          this.elements.append(enemy);
+                let enemy = document.createElement('div');
+                enemy.style.left = this.ww + this.enemyAndPlayerSize + "px";
+                enemy.style.top = this.player.getBoundingClientRect().top + "px";
+                this.elements.append(enemy);
 
-          let enemyInterval = setInterval(() => {
-            enemy.style.left = parseInt(enemy.style.left.replace("px","")) - (this.enemySpeed + this.curHardness) + "px";
+                let enemyInterval = setInterval(() => {
+                    enemy.style.left = parseInt(enemy.style.left.replace("px","")) - (this.enemySpeed + this.curHardness) + "px";
 
-            if (parseInt(enemy.style.left.replace("px","")+this.enemyAndPlayerSize) <= 0) {
-              enemy.remove();
-              clearInterval(enemyInterval);
-            } else {
-              this.checkCollisions(enemy,this.player,true);
+                    if (parseInt(enemy.style.left.replace("px","")+this.enemyAndPlayerSize) <= 0) {
+                        enemy.remove();
+                        clearInterval(enemyInterval);
+                    } else {
+                        this.checkCollisions(enemy,this.player,true);
+                    }
+                }, this.fps);
+
+                this.curHardness += this.hardnessThick;
             }
-          }, this.fps);
-
-          this.curHardness += this.hardnessThick;
-        }
-        this.initEnemy();
-      }, this.second/this.curHardness)
+            this.initEnemy();
+        }, this.second/this.curHardness)
     }
 
     run() {
-      setTimeout(() => {
+        setTimeout(() => {
 
-        this.playerMovement();
-        this.updateHighscore();
-        this.checkCollisions(this.coin,this.player,false);
-        this.run();
+            this.playerMovement();
+            this.updateHighscore();
+            this.checkCollisions(this.coin,this.player,false);
+            this.run();
 
-      }, this.fps);
+        }, this.fps);
     }
 
     updateHighscore() {
-      this.highscore += this.curHardness;
-      this.highscoreDiv.innerHTML = Math.trunc(this.highscore);
+        this.highscore += this.curHardness;
+        this.highscoreDiv.innerHTML = Math.trunc(this.highscore);
 
-      //achievment
-      if (this.ach1Unlocked === false) {
-        this.achievment("GO! BEAT YOUR RECORD!", "1", false);
-        this.ach1Unlocked = true;
-      }
+        //achievment
+        if (this.ach1Unlocked === false) {
+            this.achievment("GO! BEAT YOUR RECORD!", "1", false);
+            this.ach1Unlocked = true;
+        }
 
-      if (this.ach2Unlocked === false && this.highscore > 1000000) {
-        this.achievment("FIRST MILLION U FREAK", "1M", false);
-        this.ach2Unlocked = true;
-      }
+        if (this.ach2Unlocked === false && this.highscore > 1000000) {
+            this.achievment("FIRST MILLION", "1M", false);
+            this.ach2Unlocked = true;
+            this.lives++;
+            this.updateLive();
+        }
 
-      if (this.ach3Unlocked === false && this.highscore > 5000000) {
-        this.achievment("5 MILLION AND WE DONT STOP", "5M", false);
-        this.ach3Unlocked = true;
-      }
+        if (this.ach3Unlocked === false && this.highscore > 5000000) {
+            this.achievment("5 MILLION", "5M", false);
+            this.ach3Unlocked = true;
+            this.lives++;
+            this.updateLive();
+        }
 
-      if (this.ach4Unlocked === false && this.highscore > 13370000) {
-        this.achievment("1337 PLAYER", "13.7M", true);
-        this.ach4Unlocked = true;
-      }
+        if (this.ach4Unlocked === false && this.highscore > 13370000) {
+            this.achievment("1337 PLAYER", "13.7M", true);
+            this.ach4Unlocked = true;
+            this.lives++;
+            this.updateLive();
+        }
 
-      if (this.ach5Unlocked === false && this.highscore > 25000000) {
-        this.achievment("NOT A NORMIE", "25M", false);
-        this.ach5Unlocked = true;
-      }
+        if (this.ach5Unlocked === false && this.highscore > 25000000) {
+            this.achievment("NOT A NORMIE", "25M", false);
+            this.ach5Unlocked = true;
+            this.lives++;
+            this.updateLive();
+        }
 
-      if (this.ach6Unlocked === false && this.highscore > 33200000) {
-        this.achievment("MOONBASE 332 REACHED", "33.2M", true);
-        this.ach6Unlocked = true;
-      }
+        if (this.ach6Unlocked === false && this.highscore > 33200000) {
+            this.achievment("HALF EVIL", "33.3M", true);
+            this.ach6Unlocked = true;
+            this.lives++;
+            this.updateLive();
+        }
 
-      if (this.ach7Unlocked === false && this.highscore > 42000000) {
-        this.achievment("BLAZE IT", "42.0M", true);
-        this.ach7Unlocked = true;
-      }
+        if (this.ach7Unlocked === false && this.highscore > 42000000) {
+            this.achievment("BLAZE IT", "42.0M", true);
+            this.ach7Unlocked = true;
+            this.lives++;
+            this.updateLive();
+        }
 
-      if (this.ach8Unlocked === false && this.highscore > 69696969) {
-        this.achievment("I <3 69", "69M", true);
-        this.ach8Unlocked = true;
-      }
+        if (this.ach8Unlocked === false && this.highscore > 69696969) {
+            this.achievment("I <3 69", "69M", true);
+            this.ach8Unlocked = true;
+            this.lives++;
+            this.updateLive();
+        }
 
-      if (this.ach9Unlocked === false && this.highscore > 99999999) {
-        this.achievment("HACKERRRRRR!!!!!!!!!", "STAP", true);
-        this.ach9Unlocked = true;
-      }
+        if (this.ach9Unlocked === false && this.highscore > 99999999) {
+            this.achievment("HACKERRRRRR!!!!!!!!!", "STAP", true);
+            this.ach9Unlocked = true;
+            this.lives++;
+            this.updateLive();
+        }
     }
 
     playerMovement() {
-      if (this.key_left) this.xforce = -this.xspeed;
-      if (this.key_right) this.xforce = this.xspeed;
-      if (!this.key_left && !this.key_right) this.xforce = 0;
+        if (this.key_left) this.xforce = -this.xspeed;
+        if (this.key_right) this.xforce = this.xspeed;
+        if (!this.key_left && !this.key_right) this.xforce = 0;
 
-      if (this.key_top) this.yforce = -this.yspeed;
-      if (this.key_bottom) this.yforce = this.yspeed;
-      if (!this.key_top && !this.key_bottom) this.yforce = 0;
+        if (this.key_top) this.yforce = -this.yspeed;
+        if (this.key_bottom) this.yforce = this.yspeed;
+        if (!this.key_top && !this.key_bottom) this.yforce = 0;
 
-      if (this.player.getBoundingClientRect().left <= 0 && this.key_left) this.xforce = 0;
-      if (this.player.getBoundingClientRect().right >= this.ww && this.key_right) this.xforce = 0;
-      if (this.player.getBoundingClientRect().top <= 0 && this.key_top) this.yforce = 0;
-      if (this.player.getBoundingClientRect().bottom >= this.wh && this.key_bottom) this.yforce = 0;
+        if (this.player.getBoundingClientRect().left <= 0 && this.key_left) this.xforce = 0;
+        if (this.player.getBoundingClientRect().right >= this.ww && this.key_right) this.xforce = 0;
+        if (this.player.getBoundingClientRect().top <= 0 && this.key_top) this.yforce = 0;
+        if (this.player.getBoundingClientRect().bottom >= this.wh && this.key_bottom) this.yforce = 0;
 
-      this.player.style.left = this.player.getBoundingClientRect().left + this.xforce + "px";
-      this.player.style.top = this.player.getBoundingClientRect().top + this.yforce + "px";
+        this.player.style.left = this.player.getBoundingClientRect().left + this.xforce + "px";
+        this.player.style.top = this.player.getBoundingClientRect().top + this.yforce + "px";
     }
 
     handleKeyDown(event) {
-      if (event.keyCode === 37 || event.keyCode === 65)
-        this.key_left = true;
-      else if (event.keyCode === 39 || event.keyCode === 68)
-        this.key_right = true;
-      else if (event.keyCode === 38 || event.keyCode === 87)
-        this.key_top = true;
-      else if (event.keyCode === 40 || event.keyCode === 83)
-        this.key_bottom = true;
+        if (event.keyCode === 37 || event.keyCode === 65)
+            this.key_left = true;
+        else if (event.keyCode === 39 || event.keyCode === 68)
+            this.key_right = true;
+        else if (event.keyCode === 38 || event.keyCode === 87)
+            this.key_top = true;
+        else if (event.keyCode === 40 || event.keyCode === 83)
+            this.key_bottom = true;
     }
 
     handleKeyUp(event) {
-      if (event.keyCode === 37 || event.keyCode === 65)
-        this.key_left = false;
-      else if (event.keyCode === 39 || event.keyCode === 68)
-        this.key_right = false;
-      else if (event.keyCode === 38 || event.keyCode === 87)
-        this.key_top = false;
-      else if (event.keyCode === 40 || event.keyCode === 83)
-        this.key_bottom = false;
+        if (event.keyCode === 37 || event.keyCode === 65)
+            this.key_left = false;
+        else if (event.keyCode === 39 || event.keyCode === 68)
+            this.key_right = false;
+        else if (event.keyCode === 38 || event.keyCode === 87)
+            this.key_top = false;
+        else if (event.keyCode === 40 || event.keyCode === 83)
+            this.key_bottom = false;
     }
 
     getPositions(box) {
-      const
-        pos = box.getBoundingClientRect(),
-        width = pos.width,
-        height = pos.height;
-      return [ [ pos.left, pos.left + width ], [ pos.top, pos.top + height ] ];
+        const
+            pos = box.getBoundingClientRect(),
+            width = pos.width,
+            height = pos.height;
+        return [ [ pos.left, pos.left + width ], [ pos.top, pos.top + height ] ];
     }
 
     comparePositions(p1, p2) {
-      const
-        x1 = p1[0] < p2[0] ? p1 : p2,
-        x2 = p1[0] < p2[0] ? p2 : p1;
-      return x1[1] > x2[0] || x1[0] === x2[0] ? true : false;
+        const
+            x1 = p1[0] < p2[0] ? p1 : p2,
+            x2 = p1[0] < p2[0] ? p2 : p1;
+        return x1[1] > x2[0] || x1[0] === x2[0] ? true : false;
     }
 
     checkCollisions(enemy,player,reduceLives){
-      const
-        pos = this.getPositions(enemy),
-        pos2 = this.getPositions(player),
-        horizontalMatch = this.comparePositions(pos[0], pos2[0]),
-        verticalMatch = this.comparePositions(pos[1], pos2[1]),
-        match = horizontalMatch && verticalMatch;
-      if (match && reduceLives) {
-        enemy.remove();
-        this.lives--;
-        this.updateLive();
-        if (this.lives === 0) {
-          alert("Game Over!");
-          alert("Score: "+Math.trunc(this.highscore));
-          window.location = window.location;
+        const
+            pos = this.getPositions(enemy),
+            pos2 = this.getPositions(player),
+            horizontalMatch = this.comparePositions(pos[0], pos2[0]),
+            verticalMatch = this.comparePositions(pos[1], pos2[1]),
+            match = horizontalMatch && verticalMatch;
+        if (match && reduceLives) {
+            enemy.remove();
+            this.lives--;
+            this.updateLive();
+            if (this.lives === 0) {
+                alert("Game Over!");
+                alert("Score: "+Math.trunc(this.highscore));
+                window.location = window.location;
+            }
         }
-      }
-      if (match && !reduceLives) {
-        this.highscore += 100000*this.curHardness;
-        this.coin.remove();
-        this.initCoin();
-      }
+        if (match && !reduceLives) {
+            this.highscore += 100000*this.curHardness;
+            this.coin.remove();
+            this.initCoin();
+        }
     }
 
     achievment(title, score, rare) {
-      let achievementSound = new Audio('https://dl.dropboxusercontent.com/s/8qvrpd69ua7wio8/XboxAchievement.mp3');
-      let achievementSoundRare = new Audio('https://dl.dropboxusercontent.com/s/po1udpov43am81i/XboxOneRareAchievement.mp3');
-      document.querySelector('.achiev_name').innerText = title
-      document.querySelector('.acheive_score').innerText = score
-      document.querySelector('.unlocked').innerText = rare ? 'Rare achievement unlocked' : 'Achievement unlocked'
+        let achievementSound = new Audio('https://dl.dropboxusercontent.com/s/8qvrpd69ua7wio8/XboxAchievement.mp3');
+        let achievementSoundRare = new Audio('https://dl.dropboxusercontent.com/s/po1udpov43am81i/XboxOneRareAchievement.mp3');
+        document.querySelector('.achiev_name').innerText = title
+        document.querySelector('.acheive_score').innerText = score
+        document.querySelector('.unlocked').innerText = rare ? 'Rare achievement unlocked' : 'Achievement unlocked'
 
-      if (rare) {
-        achievementSoundRare.play()
-        document.querySelector('.achievement').classList.add('rare')
-      } else {
-        achievementSound.play()
-      }
-      document.querySelector('.circle').classList.add('circle_animate')
-      document.querySelector('.banner').classList.add('banner-animate')
-      document.querySelector('.achieve_disp').classList.add('achieve_disp_animate')
-      setTimeout(() => {
-        document.querySelector('.circle').classList.remove('circle_animate')
-        document.querySelector('.banner').classList.remove('banner-animate')
-        document.querySelector('.achieve_disp').classList.remove('achieve_disp_animate')
-        document.getElementById("a_trigger").disabled = false
         if (rare) {
-          document.querySelector('.achievement').classList.remove('rare')
+            achievementSoundRare.play()
+            document.querySelector('.achievement').classList.add('rare')
+        } else {
+            achievementSound.play()
         }
-      }, 12000)
+        document.querySelector('.circle').classList.add('circle_animate')
+        document.querySelector('.banner').classList.add('banner-animate')
+        document.querySelector('.achieve_disp').classList.add('achieve_disp_animate')
+        setTimeout(() => {
+            document.querySelector('.circle').classList.remove('circle_animate')
+            document.querySelector('.banner').classList.remove('banner-animate')
+            document.querySelector('.achieve_disp').classList.remove('achieve_disp_animate')
+            document.getElementById("a_trigger").disabled = false
+            if (rare) {
+                document.querySelector('.achievement').classList.remove('rare')
+            }
+        }, 12000)
 
     }
 
-  }
+}
 
-  const ie = new iefix();
+const ie = new iefix();
 </script>
 
 </body>
